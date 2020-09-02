@@ -8,7 +8,7 @@ version = 1.0
 @api.route('/information', methods=['GET'])
 def getInfo():
     result = {
-        'status' : 1,
+        'result' : 1,
         'version' : version,
     }
 
@@ -25,14 +25,14 @@ def signup():
         viewer_id = random.randrange(10000000, 99999999)
         user_id = random.randrange(10000000, 99999999)
         result = {
-            'status' : 1,
+            'result' : 1,
             'message' : 'ok',
             'viewer_id' : viewer_id,
             'user_id' : user_id
         }
     else:
         result = {
-            'status' : 201,
+            'result' : 201,
             'message' : ''
         }
 
@@ -41,7 +41,7 @@ def signup():
 @api.route('/tool/delete', methods=['POST'])
 def delete():
     result = {
-        'status' : 202,
+        'result' : 202,
         'message' : ''
     }
 
@@ -50,7 +50,7 @@ def delete():
 
 @api.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'status' : 404, 'message': 'Not found'}), 404)
+    return make_response(jsonify({'result' : 404, 'message': 'Not found'}), 404)
 
 if __name__ == '__main__':
     api.run(host='0.0.0.0', port=3000)
