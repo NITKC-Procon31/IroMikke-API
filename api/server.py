@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-from flask import Flask, jsonify, abort, make_response, request
-from .endpoint import Information, SignUp, UpdateUserName
+from flask import Flask, request
+from .endpoint import Information, SignUp
 from .handler import Handler
-import random, time
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -20,10 +18,6 @@ def getInfo():
 @app.route('/tool/signup', methods=SignUp.http_method())
 def signup():
     return handler.handle_signup(request.json)
-
-@app.route('/user/update_name', methods=UpdateUserName.http_method())
-def update_user_name():
-    pass
 
 @app.errorhandler(404)
 def not_found(error):

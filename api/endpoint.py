@@ -60,11 +60,7 @@ class SignUp(Post):
             return None
 
 
-class UpdateUserName(Post):
-    new_name: str
-
-
-class Validator():
+class Validator:
     @classmethod
     def validate_int(cls, i: int):
         if type(i) == int:
