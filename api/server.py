@@ -1,6 +1,7 @@
 from flask import Flask, request
 from .endpoint import Information, SignUp
 from .handler import Handler
+from .config import Model, ENGINE
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -9,6 +10,7 @@ handler = Handler()
 VERSION = 1.0
 
 def run(host, port):
+    Model.metadata.create_all(bind=ENGINE)
     app.run(host=host, port=port)
 
 @app.route('/information', methods=Information.http_method())
