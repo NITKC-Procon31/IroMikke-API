@@ -17,7 +17,7 @@ def getInfo():
 
 @app.route('/tool/signup', methods=SignUp.http_method())
 def signup():
-    return handler.handle_signup(request.json)
+    return handler.handle_signup(request.json, request.headers)
 
 @app.errorhandler(404)
 def not_found(error):
