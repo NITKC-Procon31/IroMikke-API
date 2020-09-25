@@ -42,11 +42,7 @@ class SignUp(Post):
         self.user_id = user_id
 
     def response(self):
-        return {
-            'name': self.name,
-            'viewer_id': self.viewer_id,
-            'user_id': self.user_id
-        }
+        return []
 
     @classmethod
     def request(cls, dic: dict):
