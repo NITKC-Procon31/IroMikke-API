@@ -1,11 +1,46 @@
 # IroMikke-API
 
-## エンドポイント一覧
+## データの通信概要
+### リクエストボディの中身
+```json=request
+{
+    'viewer_id': 0,
+    'user_id': 0,
+    'name': 'Kosen Taro'
+}
+```
+データはAPI毎に中身が異なり、上記のものは*SignUp*の例である。
 
-レスポンスには個別のものに加え、リザルトコードを示す`int result`が付与される。
+### レスポンスボディの中身
+```json=response
+{
+    'data_headers': {
+        'viewer_id': 0,
+        'user_id': 0,
+        'timestamp': 1601046969,
+        'result_code': 1
+    },
+    'data': []
+}
+
+```
+`data_headers`と`data`からなり、ともに Map（Dictionary） の形になる。
+
+上記の例では`data`の中身が空なので、 Array の形をとる。
+
+`data`はAPIによって中身が異なるため、各APIのレスポンスを参照のこと。
+
+APIに必要なパラメータ以外は無視されることに注意。
+
+### data_headers
+- `int viewer_id` : ユーザの**viewer_id**、GETリクエストの場合、0に固定される。
+- `int user_id` : ユーザの**user_id**、viewer_idと同様にGETリクエストの場合、0に固定される。
+- `int timestamp` : サーバのUNIX時間。
+- `int result_code` : リクエストに対するリザルトコード
 
 詳しくは[リザルトコード一覧](#リザルトコード一覧)を参照されたい。
 
+## エンドポイント一覧
 ## /information
 ### 仕様
 
@@ -33,24 +68,7 @@ APIType : SignUp
 - `string name` : 任意のユーザ名
 
 ### レスポンス
-- `int viewer_id` : 登録された**viewer_id**
-- `int user_id` : 登録された**user_id**
-
-## /tool/delete
-### 仕様
-
-メソッド : POST
-
-APIType : Delete
-
-備考 : ユーザデータの削除
-
-### リクエスト
-- `int viewer_id` : クライアントに保存された**viewer_id**
-- `int user_id` : クライアントに保存された**user_id**
-
-### レスポンス
-なし
+空配列
 
 
 ## リザルトコード一覧
@@ -58,4 +76,3 @@ APIType : Delete
 | :---------: | :---------------------: | :----------: |
 | 1           | All                     | サーバとの通信に成功   |
 | 201         | [SignUp](#/tool/signup) | ユーザデータの登録に失敗 |
-| 202         | [Delete](#/tool/delete) | ユーザデータの削除に失敗 |
