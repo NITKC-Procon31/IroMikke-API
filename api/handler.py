@@ -3,6 +3,8 @@ from .data_headers import DataHeaders
 from .result_code import ResultCode
 from .endpoint import Information, SignUp
 from .cryptographer import Cryptographer
+from .models.user import User
+from .user_manager import UserManager
 from flask import jsonify, make_response, abort
 
 class Handler:
@@ -19,7 +21,13 @@ class Handler:
         if endpoint is None:
             return self.error(ResultCode.RC_SIGNUP_ERROR, 'The field is invalied.')
         else:
-            pass
+            user: User = UserManager.generate(endpoint.name)
+            print(UserManager.get_user_by_user_id(user.user_id).name)
+
+            return self.success(
+                DataHeaders(user.viewer_id, user.user_id).to_dict(ResultCode.RC_SUCCESS),
+                endpoint.response()
+            )
 
     def handle_404(self):
         return make_response(jsonify({'result' : 404, 'message': 'Not found'}), 404, {"Content-Type": "application/json"})
@@ -47,8 +55,10 @@ class Handler:
 
         try:
             id: str = Cryptographer.decode(headers.get('USER-ID'))
-            viewer_id, user_id = id.split('+')
+            viewer_id, user_id = map((lambda x: int(x)), id.split('+'))
+            if not (100000000 <= viewer_id <= 999999999 and 100000000 <= user_id <= 999999999):
+                abort(403)
 
-            return DataHeaders(viewer_id=int(viewer_id), user_id=int(user_id))
+            return DataHeaders(viewer_id=viewer_id, user_id=user_id)
         except:
             abort(403)
