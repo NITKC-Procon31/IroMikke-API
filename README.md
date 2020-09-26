@@ -1,6 +1,12 @@
 # IroMikke-API
 
 ## データの通信概要
+### リクエストヘッダ
+#### USER-ID
+*viewer_id*と*user_id*の間に + を加え、文字列を結合し、さらに暗号化を施したもの。
+
+暗号化については、[Cryptographer](#Cryptographer) を参照されたい。
+
 ### リクエストボディの中身
 ```json=request
 {
@@ -39,6 +45,43 @@ APIに必要なパラメータ以外は無視されることに注意。
 - `int result_code` : リクエストに対するリザルトコード
 
 詳しくは[リザルトコード一覧](#リザルトコード一覧)を参照されたい。
+
+## Cryptographer
+[USER-ID](#USER-ID)で利用されている暗号化アルゴリズム。
+
+実装自体は非常に単純なものとなっている。
+
+### エンコード
+文字列を1文字ずつ読んでいき、ASCIIコードに変換し10を足す。さらにASCIIコードを文字に戻し、文字の前後に 1～9 のランダムな数字を結合し、新しい文字列を生成する。
+
+以下、Pythonでの実装例。
+
+```python
+def encode(s: str) -> str:
+    new_s = ''
+    for i in range(0, len(s)):
+        new_s += str(random.randrange(10)) \
+              + chr(ord(s[i]) + 10) \
+              + str(random.randrange(10))
+
+    return new_s
+```
+
+### デコード
+文字列を2文字目から3文字飛ばしながら（2文字分無視しながら）読んでいき、ASCIIコードに変換し10を引く。さらにASCIIコードを文字に戻し、新しい文字列の最後尾に結合する。
+
+以下、PHPでの実装例。
+```php
+function encode(string $s): string
+{
+    $new_s = "";
+    for ($i = 1; $i < strlen($s); $i += 3) {
+        $new_s .= chr(ord($s[$i]) - 10);
+    }
+
+    return $new_s;
+}
+```
 
 ## エンドポイント一覧
 ## /information
