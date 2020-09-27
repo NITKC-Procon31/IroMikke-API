@@ -22,7 +22,6 @@ class Handler:
             return self.error(ResultCode.RC_SIGNUP_ERROR, 'The field is invalied.')
         else:
             user: User = UserManager.generate(endpoint.name)
-            print(UserManager.get_user_by_user_id(user.user_id).name)
 
             return self.success(
                 DataHeaders(user.viewer_id, user.user_id).to_dict(ResultCode.RC_SUCCESS),
