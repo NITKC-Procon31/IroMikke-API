@@ -1,7 +1,7 @@
 from flask import Flask, request
 from .endpoint import Information, SignUp
 from .handler import Handler
-from .config import Model, ENGINE
+from .config import Model, ENGINE, session
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -24,3 +24,11 @@ def signup():
 @app.errorhandler(404)
 def not_found(error):
     return handler.handle_404()
+
+@app.teardown_appcontext
+def session_clear(exception):
+    if exception and session.is_active:
+        session.rollback()
+    else:
+        pass
+    session.close()

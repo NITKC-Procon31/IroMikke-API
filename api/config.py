@@ -15,7 +15,8 @@ SQLALCHEMY_ECHO = False
 
 ENGINE = create_engine(
     SQLALCHEMY_DATABASE_URI,
-    encoding = "utf-8",
+    encoding="utf-8",
+    pool_recycle=2500,
     echo=SQLALCHEMY_ECHO
 )
 
@@ -23,6 +24,7 @@ session = scoped_session(
     sessionmaker(
         autocommit = False,
         autoflush = False,
+        expire_on_commit = False,
         bind = ENGINE
     )
 )
