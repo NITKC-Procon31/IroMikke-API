@@ -1,5 +1,5 @@
 from flask import Flask, request
-from .endpoint import Information, SignUp
+from .endpoint import Information, SignUp, GetProfile
 from .handler import Handler
 from .config import Model, ENGINE, session
 
@@ -20,6 +20,10 @@ def getInfo():
 @app.route('/tool/signup', methods=SignUp.http_method())
 def signup():
     return handler.handle_signup(request.json, request.headers)
+
+@app.route('/user/get_profile', methods=GetProfile.http_method())
+def get_profile():
+    return handler.handle_get_profile(request.json, request.headers)
 
 @app.errorhandler(404)
 def not_found(error):

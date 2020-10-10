@@ -24,7 +24,6 @@ session = scoped_session(
     sessionmaker(
         autocommit = False,
         autoflush = False,
-        expire_on_commit = False,
         bind = ENGINE
     )
 )

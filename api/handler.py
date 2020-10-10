@@ -1,7 +1,7 @@
 import api.server
 from .data_headers import DataHeaders
 from .result_code import ResultCode
-from .endpoint import Information, SignUp
+from .endpoint import Information, SignUp, GetProfile
 from .cryptographer import Cryptographer
 from .models.user import User
 from .user_manager import UserManager
@@ -27,6 +27,23 @@ class Handler:
                 DataHeaders(user.viewer_id, user.user_id).to_dict(ResultCode.RC_SUCCESS),
                 endpoint.response()
             )
+
+    def handle_get_profile(self, request: dict, headers):
+        data_headers: DataHeaders = self.get_data_headers(headers)
+        endpoint: GetProfile = GetProfile.request(request)
+        if endpoint is None:
+            return self.error(ResultCode.RC_GET_PROFILE_ERROR, 'The field is invalied.')
+        else:
+            user: User = UserManager.get_user_by_viewer_id(endpoint.viewer_id)
+            if user is None:
+                return self.error(ResultCode.RC_GET_PROFILE_ERROR, 'User not found.')
+            else:
+                endpoint.name = user.name
+
+                return self.success(
+                    data_headers.to_dict(ResultCode.RC_SUCCESS),
+                    endpoint.response()
+                )
 
     def handle_404(self):
         return make_response(jsonify({'result' : 404, 'message': 'Not found'}), 404, {"Content-Type": "application/json"})

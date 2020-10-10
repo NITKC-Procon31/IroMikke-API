@@ -55,6 +55,28 @@ class SignUp(Post):
         except InvaliedTypeException:
             return None
 
+class GetProfile(Post):
+    name: str
+    viewer_id: int
+
+    def __init__(self, viewer_id: int):
+        self.viewer_id = viewer_id
+
+    def response(self):
+        return {
+            'name': self.name,
+            'viewer_id': self.viewer_id
+        }
+
+    @classmethod
+    def request(cls, dic: dict):
+        try:
+            return GetProfile(viewer_id=Validator.validate_int(dic['viewer_id']))
+        except KeyError:
+            return None
+        except InvaliedTypeException:
+            return None
+
 
 class Validator:
     @classmethod
